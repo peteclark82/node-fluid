@@ -1,15 +1,17 @@
 # Fluid.js
 
-Fluid.js is a simple fluent interface API used to wrap existing non-fluent objects.
+Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create a fluent interface
+around existing vanilla objects, without all the boiler plate.
 
 This is a useful extension to the excellent [Async](https://github.com/caolan/async) module.
 
-NOTE: It is only possible to wrap methods which implement the following asynchronous signature:-
+NOTE: Fluid.js will only wrap methods which implement the following asynchronous signature:-
 
 	function(options, callback) -> callback(err, result)
 
 
 ## Quick Examples
+
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
 			//do something
