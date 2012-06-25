@@ -14,6 +14,8 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 
 ### Example objects
 
+For the sake of these examples imagine we have the following custom objects
+
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
 			//do something
