@@ -229,10 +229,10 @@ callback when successfully completed, or any of the methods error.
 
 __Arguments__
 
-* callback(err, res) - A callback which is called after all the methods have been called successfully,
-  or an error has occurred. If no errors occurr res will be an array of return values passed to each method callback.
-  If multiple queues have been executed it will be an array (item for each queue) of arrays 
-  (item for each method return value)
+* callback(err, res) - A callback which is invoked after all of the methods have been run,
+  or an error has occurred. If no errors occurr, res will be an array of return values which were passed to each method callback.
+  If multiple flow control queues have been executed it will be an array (entry for each queue) of arrays 
+  (entry for each method return value)
   
 __Example__
 
