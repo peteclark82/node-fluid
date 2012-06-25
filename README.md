@@ -50,9 +50,7 @@ For the sake of these examples imagine we have the following custom objects
 		// results is now an array of return values passed to each method callback
 	});
 	
-### Streamlined example
-
-Note: series is the default flow control mode, so it can be ommitted
+### Streamlined example - (Note: series is the default mode so can be ommitted)
 	
 	fluid(myFirstObj).doSomething({ /* args */ }).doSomethingElse({ /* args */ })
 		.with(mySecondObj).doSomethingMore({ /* args */ })
