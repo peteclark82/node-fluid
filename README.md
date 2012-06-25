@@ -12,6 +12,8 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 
 ## Quick Examples
 
+### Example objects
+
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
 			//do something
@@ -30,11 +32,13 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 		}
 	};
 
+### Setup
+
 	var fluid = require("fluid");
 	
-	/* Expressive example */
+### Expressive Example
 	
-    fluid().series()		
+	fluid().series()		
 		.with(myFirstObj)
 			.doSomething({ /* args */ })
 			.doSomethingElse({ /* args */ })
@@ -44,7 +48,7 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 		// results is now an array of return values passed to each method callback
 	});
 	
-	/* Streamlined example - (Note: series is the default mode so can be ommitted) */
+### Streamlined example - (Note: series is the default mode so can be ommitted)
 	
 	fluid(myFirstObj).doSomething({ /* args */ }).doSomethingElse({ /* args */ })
 		.with(mySecondObj).doSomethingMore({ /* args */ })
@@ -52,23 +56,23 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 		// results is now an array of return values passed to each method callback
 	});
 	
-	/* Multiple queue types example */
+### Multiple queue types example
 	
-    fluid()
-	.series()		
-		.with(myFirstObj)
-			.doSomething({ /* args */ })
-			.doSomethingElse({ /* args */ })
-	.parallel()		
-		.with(mySecondObj)
-			.doSomethingMore({ /* args */ })
-			.doSomethingMorer({ /* args */ })
-			.doSomethingMorerer({ /* args */ })
-	.go(function(err, results) {
-		/*
-			results is now an array (item for each queue) of arrays (item for each method return value)
-		*/
-	});
+	fluid()
+		.series()		
+			.with(myFirstObj)
+				.doSomething({ /* args */ })
+				.doSomethingElse({ /* args */ })
+		.parallel()		
+			.with(mySecondObj)
+				.doSomethingMore({ /* args */ })
+				.doSomethingMorer({ /* args */ })
+				.doSomethingMorerer({ /* args */ })
+		.go(function(err, results) {
+			/*
+				results is now an array (item for each queue) of arrays (item for each method return value)
+			*/
+		});
 	
 
 There are many more functions available so take a look at the docs below for a
