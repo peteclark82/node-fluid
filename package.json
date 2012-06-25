@@ -18,7 +18,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git://github.com/[[visionmedia/express.git]]"
+    "url": "git://github.com/peteclark82/node-fluid"
   },
   "main": "./lib/fluid.js",
   "_id": "fluid@0.0.1",
