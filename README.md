@@ -583,5 +583,4 @@ __Example__
 		.doSomethingMore({ /* args */ })
 	.go(function(err, res) {
 		/* finished with error, without executing doSomethingMore */
->>>>>>> Fixed package and readme
 	}
