@@ -1,0 +1,27 @@
+{
+  "name": "fluid",
+  "version": "0.0.1",
+  "description": "A wrapper for the async module. It provides a fluent interface around any object, wrapping all methods",
+  "author": {
+    "name":  "Pete Clark"
+  },
+  "contributors": [],
+  "dependencies": {
+    "async": ">= 0.1.22"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "fluent",
+    "fluid",
+    "async",
+    "flow"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/[[visionmedia/express.git]]"
+  },
+  "main": "./lib/fluid.js",
+  "_id": "fluid@0.0.1",
+  "_npmVersion": "1.1.12",
+  "_nodeVersion": "v0.8.0"
+}
