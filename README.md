@@ -66,7 +66,7 @@ The solution...
 
 	var fluid = require("fluid");
 	
-### Expressive Example
+### Expressive
 	
 	fluid().series()		
 		.with(myFirstObj)
@@ -78,7 +78,7 @@ The solution...
 		// results is now an array of return values passed to each method callback
 	});
 	
-### Streamlined example
+### Streamlined
 
 Note: series is the default flow control mode, so it can be ommitted
 	
@@ -88,7 +88,7 @@ Note: series is the default flow control mode, so it can be ommitted
 		// results is now an array of return values passed to each method callback
 	});
 	
-### Multiple flow control types example
+### Multiple flow control types
 	
 	fluid()
 		.series()		
