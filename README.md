@@ -120,6 +120,11 @@ Releases are available for download from
 [GitHub](https://github.com/peteclark82/node-fluid).
 
 
+## Appreciation
+
+Many thanks to [caolan](https://github.com/caolan) for sharing his excellent module [Async](https://github.com/caolan/async)
+
+
 ## Documentation
 
 * [fluid](#fluid)
@@ -245,7 +250,7 @@ __Example__
 ---------------------------------------
 
 <a name="go" />
-### go(callback)
+### go([options,] callback)
 
 Executes all queued method calls against their registered application contexts, then invokes the specified
 callback when completed, or any of the methods error.
@@ -254,6 +259,8 @@ If multiple flow control groups have been created, each group will be executed i
 
 __Arguments__
 
+* Optional. options - Options for execution
+    * debug - Boolean. Logs out to the console information about execution for debugging.
 * callback(err, res) - A callback that is invoked after all of the methods have been run,
   or an error occurrs. If no error occurrs, res will be an array of return values that were passed to each method callback.
   If multiple flow control queues have been executed it will be an array (entry for each queue) of arrays 
@@ -315,9 +322,4 @@ __Example__
 		.doSomethingMore({ /* args */ })
 	.go(function(err, res) {
 		/* finished with error, without executing doSomethingMore */
-	}
-	
-	
-## Appreciation
-
-Many thanks to [caolan](https://github.com/caolan) for sharing his excellent module [Async](https://github.com/caolan/async)
+	});
