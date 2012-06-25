@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Fluid.js
 
 Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
