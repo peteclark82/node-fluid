@@ -1,9 +1,10 @@
 {
   "name": "fluid",
   "version": "0.0.1",
-  "description": "A wrapper for the async module. It provides a fluent interface around any object, wrapping all methods",
+  "description": "A wrapper for the flow control portion of the async module. It provides a fluent interface around any object, allowing chained method calls.",
   "author": {
-    "name":  "Pete Clark"
+    "name":  "Pete Clark",
+	"email": "pclarkgithub@gmail.com"
   },
   "contributors": [],
   "dependencies": {
@@ -14,7 +15,10 @@
     "fluent",
     "fluid",
     "async",
-    "flow"
+    "flow",
+	"control",
+	"chaining",
+	"chained"
   ],
   "repository": {
     "type": "git",
