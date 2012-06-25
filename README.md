@@ -1,12 +1,10 @@
 # Fluid.js
 
-Fluid is a simple fluent interface API used to create a fluent interface around existing 
-non-fluent objects.
+Fluid.js is a simple fluent interface API used to wrap existing non-fluent objects.
 
-It's a very simple API that implements a pattern around the [Async](https://github.com/caolan/async) module.
+This is a useful extension to the excellent [Async](https://github.com/caolan/async) module.
 
-NOTE: As with the Async module itself, it is only possible to wrap methods which implement 
-the following asynchronous signature:-
+NOTE: It is only possible to wrap methods which implement the following asynchronous signature:-
 
 	function(options, callback) -> callback(err, result)
 
@@ -256,7 +254,7 @@ __Example__
 
 The fluid context will wrap all properties of an application context that are functions.
 
-NOTE: As with the Async module itself, it is only possible to wrap functions that implement 
+NOTE: It is only possible to wrap functions that implement 
 the following asynchronous signature:-
 
 	function(options, callback) -> callback(err, result)
