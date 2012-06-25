@@ -1,7 +1,7 @@
 # Fluid.js
 
 Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
-around existing vanilla objects, without all the boiler plate.
+around existing vanilla objects, without all the boiler plate code.
 
 This is a useful extension to the excellent [Async](https://github.com/caolan/async) module.
 
@@ -170,7 +170,7 @@ __Example__
 ### series()
 
 Creates a new queue of method calls that will be executed in series. Multiple queues 
-with different flow control types can be created, and will themselves be executed in series when the 
+with different flow control types can be used together, and will themselves be executed in series when the 
 [go](#go) command is called.
 
 Note, This is the default execution mode when a new fluid context has been created.
@@ -197,7 +197,7 @@ __Example__
 ### parallel()
 
 Creates a new queue of method calls that will be executed in parallel. Multiple queues 
-with different flow control types can be created, and will themselves be executed in series when the 
+with different flow control types can be used together, and will themselves be executed in series when the 
 [go](#go) command is called.
 
 Note, see the [Async](https://github.com/caolan/async) module for more information on the difference 
@@ -225,12 +225,14 @@ __Example__
 ### go(callback)
 
 Executes all queued method calls against their registered application contexts, then invokes the specified
-callback when successfully completed, or any of the methods error.
+callback when completed, or any of the methods error.
+
+If multiple flow control groups have been created, each group will be executed in series.
 
 __Arguments__
 
-* callback(err, res) - A callback which is invoked after all of the methods have been run,
-  or an error has occurred. If no errors occurr, res will be an array of return values which were passed to each method callback.
+* callback(err, res) - A callback that is invoked after all of the methods have been run,
+  or an error occurrs. If no error occurrs, res will be an array of return values that were passed to each method callback.
   If multiple flow control queues have been executed it will be an array (entry for each queue) of arrays 
   (entry for each method return value)
   
@@ -261,7 +263,7 @@ __Example__
 <a name="contextMethods" />
 ### Context Methods
 
-The fluid context will wrap all properties of an application context that are functions.
+The fluid context will wrap all function properties of an application context.
 
 NOTE: It is only possible to wrap functions that implement 
 the following asynchronous signature:-
