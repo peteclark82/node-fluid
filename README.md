@@ -56,7 +56,7 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 		// results is now an array of return values passed to each method callback
 	});
 	
-### Multiple queue types example
+### Multiple flow control types example
 	
 	fluid()
 		.series()		
@@ -75,11 +75,6 @@ NOTE: Fluid.js will only wrap methods which implement the following asynchronous
 		});
 	
 
-There are many more functions available so take a look at the docs below for a
-full list. This module aims to be comprehensive, so if you feel anything is
-missing please create a GitHub issue for it.
-
-
 ## Install
 
 To install with node package manager:
@@ -90,7 +85,7 @@ To install with node package manager:
 ## Download
 
 Releases are available for download from
-[GitHub](http://myurl).
+[GitHub](https://github.com/peteclark82/node-fluid).
 
 
 ## Appreciation
@@ -110,6 +105,7 @@ Thanks to [caolan](https://github.com/caolan) for his great module [Async](https
 * [go](#go)
 * [context methods](#contextMethods)
 
+---------------------------------------
 
 <a name="fluid" />
 ### fluid([context])
@@ -134,8 +130,11 @@ __Example__
 		/* .etc.etc... */
 	.go(function(err, res) { /* finished */ }
 
-		
+
 ---------------------------------------
+### Fluid Context Methods
+---------------------------------------		
+
 
 <a name="with" />
 ### with(context)
