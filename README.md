@@ -1,6 +1,6 @@
 # Fluid.js
 
-Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create a fluent interface
+Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
 around existing vanilla objects, without all the boiler plate.
 
 This is a useful extension to the excellent [Async](https://github.com/caolan/async) module.
