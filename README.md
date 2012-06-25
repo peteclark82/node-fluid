@@ -3,19 +3,21 @@
 Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
 around existing vanilla objects, without all the boiler plate code.
 
-This is a useful extension to the excellent [Async](https://github.com/caolan/async) module.
+This is a useful extension to the popular [Async](https://github.com/caolan/async) module.
 
 NOTE: Fluid.js will only wrap methods which implement the following asynchronous signature:-
 
 	function(options, callback) -> callback(err, result)
 
 
-## Quick Examples
+## The Problem
 
-### Example objects
+The pain of flow control and callback hell with asynchronous javascript code is a widely discussed subject.
+Many libraries exist for node.js that make things much less painful. This module is meant to add another useful
+tool to that kit.
 
-For the sake of these examples imagine we have the following custom objects
-
+Take the following objects:-
+	
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
 			//do something
@@ -33,6 +35,32 @@ For the sake of these examples imagine we have the following custom objects
 			callback(err, result);
 		}
 	};
+
+The code to execute these "callback" based methods would look something like this:-
+
+	myFirstObj.doSomething({ /* args */ }, function(err, res1) {
+		if (err) {
+			console.log(err);
+		} else {
+			myFirstObj.doSomethingElse({ /* args */ }, function(err, res2) {
+				if (err) {
+					console.log(err);
+				} else {
+					myFirstObj.doSomethingMore({ /* args */ }, function(err, res3) {
+						if (err) {
+							console.log(err);
+						} else {
+							/* finished */
+						}
+					});
+				}
+			});
+		}
+	});
+
+The solution...
+	
+## Quick Examples
 
 ### Setup
 
@@ -90,11 +118,6 @@ To install with node package manager:
 
 Releases are available for download from
 [GitHub](https://github.com/peteclark82/node-fluid).
-
-
-## Appreciation
-
-Thanks to [caolan](https://github.com/caolan) for his great module [Async](https://github.com/caolan/async)
 
 
 ## Documentation
@@ -293,3 +316,8 @@ __Example__
 	.go(function(err, res) {
 		/* finished with error, without executing doSomethingMore */
 	}
+	
+	
+## Appreciation
+
+Many thanks to [caolan](https://github.com/caolan) for sharing his excellent module [Async](https://github.com/caolan/async)
