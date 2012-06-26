@@ -1,6 +1,6 @@
 {
   "name": "fluid",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A wrapper for the flow control portion of the async module. It provides a fluent interface around any object, allowing chained method calls.",
   "author": {
     "name":  "Pete Clark",
