@@ -5,9 +5,13 @@ around existing vanilla objects, without all the boiler plate code.
 
 This is a useful extension to the popular [Async](https://github.com/caolan/async) module.
 
-NOTE: Fluid.js will only wrap methods that implement the following asynchronous signature:-
+NOTE: Fluid.js currently only supports methods that implement the following asynchronous signature:-
 
 	function(options, callback) -> callback(err, result)
+	
+The next version (due very soon) will support:-
+	
+	function(arg1, arg2, ..., callback) -> callback(err, result)
 
 
 ## The Problem
