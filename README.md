@@ -68,7 +68,17 @@ The solution...
 ### Setup
 
 	var fluid = require("fluid");
+
+### Streamlined
+
+Note: series is the default flow control mode, so it can be ommitted
 	
+	fluid(myFirstObj).doSomething({ /* args */ }).doSomethingElse({ /* args */ })
+		.with(mySecondObj).doSomethingMore({ /* args */ })
+	.go(function(err, results) {
+		// results is now an array of return values passed to each method callback
+	});
+
 ### Expressive
 	
 	fluid().series()		
@@ -79,18 +89,8 @@ The solution...
 			.doSomethingMore({ /* args */ })
 	.go(function(err, results) {
 		// results is now an array of return values passed to each method callback
-	});
-	
-### Streamlined
+	});	
 
-Note: series is the default flow control mode, so it can be ommitted
-	
-	fluid(myFirstObj).doSomething({ /* args */ }).doSomethingElse({ /* args */ })
-		.with(mySecondObj).doSomethingMore({ /* args */ })
-	.go(function(err, results) {
-		// results is now an array of return values passed to each method callback
-	});
-	
 ### Multiple flow control types
 	
 	fluid()
