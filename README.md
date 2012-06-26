@@ -276,14 +276,37 @@ __Example__
 		.doSomethingElse({ /* args */ })
 		.parallel()
 		.doSomethingMore({ /* args */ })
-		/* .etc.etc... */
 	.go(function(err, res) { 
 		if (err) { /* error */ } else {
-			console.log(res[0][0]);
-			console.log(res[0][1]);
+		/* 
+			res :-
+				
+				[
+					[
+						0 : { /* return value from doSomething */ },
+						1 : { /* return value from doSomethingElse */ },
+						"doSomething" : { /* return value from doSomething */ },
+						"doSomethingElse" : { /* return value from doSomethingElse */ }
+					],
+					[
+						0 : { /* return value from doSomethingMore */ },
+						"doSomethingMore" : { /* return value from doSomethingMore */ },
+					]
+				]
+				
+			if "parallel" wasn't there, and it was only a single mode of flow control it would look 
+			like :-
+				
+				[
+					0 : { /* return value from doSomething */ },
+					1 : { /* return value from doSomethingElse */ },
+					2 : { /* return value from doSomethingMore */ },
+					"doSomething" : { /* return value from doSomething */ },
+					"doSomethingElse" : { /* return value from doSomethingElse */ },
+					"doSomethingMore" : { /* return value from doSomethingMore */ }
+				]
 			
-			console.log(res[1][0]);
-			/* .etc.etc... */
+		*/
 		}
 	}
 
@@ -304,13 +327,13 @@ __Example__
 
     var myObj = {
 		doSomething : function(options, callback) {
-			callback(null, { prop1 : 1 });
+			callback(null, { /* return values */ });
 		},
 		doSomethingElse : function(options, callback) {
 			callback({ message : "Error!" });
 		},
 		doSomethingMore : function(options, callback) {
-			callback(null, { prop2 : 1 });
+			callback(null, { /* return values */ });
 		}
 	};
 	
@@ -322,4 +345,41 @@ __Example__
 		.doSomethingMore({ /* args */ })
 	.go(function(err, res) {
 		/* finished with error, without executing doSomethingMore */
+	});
+	
+You can even use the result of previous methods in the options to others methods
+
+	var myObj = {
+		doSomething : function(options, callback) {
+			callback(null, { ret1 : options.opt1 + 10 });
+		},
+		doSomethingElse : function(options, callback) {
+			callback(null, { ret2 : options.opt2 * 10 });
+		}
+	};
+	
+	var fluid = require("fluid");
+	
+	fluid(myObj)
+		.doSomething({ opt1 : 1 })
+		.doSomethingElse(function(){return { opt2 : this[0].ret1 }})
+	.go(function(err, res) {
+		/* 
+			res :-
+				[
+					0 : { ret1 : 11 },
+					1 : { ret2 : 110 },
+					"doSomething" : { ret1 : 11 },
+					"doSomethingElse" : { ret2 : 110 }
+				]		
+		*/
+	});
+
+Or by name if you prefer...
+
+	fluid(myObj)
+		.doSomething({ opt1 : 1 })
+		.doSomethingElse(function(){return { opt2 : this.doSomething.ret1 }})
+	.go(function(err, res) {
+		/* finished */
 	});
