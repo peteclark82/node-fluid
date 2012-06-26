@@ -19,7 +19,7 @@ The next version (due very soon) will also support the following:-
 The pain of flow control and callback hell with asynchronous javascript code is a widely discussed subject.
 Many libraries exist for node.js that make things much less painful. This module is meant to add another tool to that kit.
 
-Take the following objects:-
+For example, with the following custom objects:-
 	
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
