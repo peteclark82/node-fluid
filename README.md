@@ -49,7 +49,7 @@ The code to execute these "callback" based methods would look something like thi
 				if (err) {
 					console.log(err);
 				} else {
-					myFirstObj.doSomethingMore({ /* args */ }, function(err, res3) {
+					mySecondObj.doSomethingMore({ /* args */ }, function(err, res3) {
 						if (err) {
 							console.log(err);
 						} else {
