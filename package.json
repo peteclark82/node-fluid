@@ -1,16 +1,18 @@
 {
   "name": "fluid",
-  "version": "0.0.2",
-  "description": "A wrapper for the flow control portion of the async module. It provides a fluent interface around any object, allowing chained method calls.",
+  "version": "0.1.0",
+  "description": "An extension to the async utility library. It provides a dynamic fluent interface around any object, allowing chained async method calls.",
   "author": {
     "name":  "Pete Clark",
 	"email": "pclarkgithub@gmail.com"
   },
   "contributors": [],
   "dependencies": {
-    "async": ">= 0.1.22"
+    "async": "= 0.1.22"
   },
-  "devDependencies": {},
+  "devDependencies": {
+	"vows" : "= 0.6.3"
+  },
   "keywords": [
     "fluent",
     "fluid",
@@ -25,6 +27,9 @@
     "url": "git://github.com/peteclark82/node-fluid"
   },
   "main": "./lib/fluid.js",
+  "scripts": {
+    "test": "vows --spec"
+  },
   "_id": "fluid@0.0.1",
   "_npmVersion": "1.1.12",
   "_nodeVersion": "v0.8.0"
