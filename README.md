@@ -1,4 +1,4 @@
-# Fluid.js
+# Fluid.js [![Build Status](https://secure.travis-ci.org/peteclark82/node-fluid.png)](https://secure.travis-ci.org/peteclark82/node-fluid.png)
 
 Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
 around existing vanilla objects, without all the boiler plate code.
