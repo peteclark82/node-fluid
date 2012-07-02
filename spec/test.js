@@ -42,7 +42,7 @@ vows.describe('Using fluid').addBatch({
 				},
 				'in series by default': function (err, topic) {
 					assert.isNull(err);
-					assert.equal(topic.series.method.length, 4);
+					assert.equal(topic.series.method.length, 3);
 					assert.equal(topic.series.method[0], 1);
 					assert.equal(topic.series.method[1], 2);
 					assert.equal(topic.series.method[2], 3);
