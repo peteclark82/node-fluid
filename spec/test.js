@@ -168,7 +168,7 @@ vows.describe('Using fluid').addBatch({
 			},
 			'return value names': function (err, topic) {
 				assert.isDefined(topic.first);
-				assert.equal(topic.first, 1);
+				assert.equal(topic.first[0], 1);
 			},
 			'error messages to wrap the ones raised': function (err, topic) {
 				assert.isDefined(err);
