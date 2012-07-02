@@ -5,21 +5,61 @@ around existing vanilla objects, without all the boiler plate code.
 
 This is a useful extension to the popular [Async](https://github.com/caolan/async) module.
 
-NOTE: Fluid.js currently only supports methods that implement the following asynchronous function signature:-
+NOTE: Fluid.js currently only supports methods that take a callback as the last argument:-
 
 	function(options, callback) -> callback(err, result)
-	
-The next version (due very soon) will also support the following:-
-	
+		
 	function(arg1, arg2, ..., callback) -> callback(err, result)
+	
+	etc...
 
 
 ## The Problem
 
-The pain of flow control and callback hell with asynchronous javascript code is a widely discussed subject.
-Many libraries exist for node.js that make things much less painful. This module is meant to add another tool to that kit.
+Flow control and callbacks can become very messy and unmanagable when using lots of asynchronous functions.
+Many libraries exist for node.js that make things much less painful. This module is meant to add yet another
+tool to your belt.
 
-For example, with the following custom objects:-
+For example a typical bit of file processing might look something like:-
+
+	fs.readFile("./input1.txt", function(err, input1Buffer) {
+		if (err) {console.log(err)} else {
+			fs.readFile("./input2.txt", function(err, input2Buffer) {
+				if (err) {console.log(err)} else {
+					var content = input1Buffer.toString() + input2Buffer.toString();
+					fs.writeFile("./output.txt", content, function(err) {
+						if (err) {console.log(err)} else {
+							//do something
+						}
+					});
+				}
+			});
+		}
+	});
+
+With Fluid.js we could write it like this:-
+	
+	$f(fs).readFile("./input1.txt").readFile("./input2.txt")
+		.custom(function(callback) {
+			var content = this.readFile[0].toString() + this.readFile[1].toString();
+			callback(null, content);
+		}).writeFile("./output1.txt", $f("this.custom[0]"))
+	.go(function(err, values) {
+		if (err) {console.log(err)} else {
+			//do something
+		}
+	});
+	
+Any error handling is managed in the "go" callback and all callback return values are available for usage.
+
+	
+## Quick Examples
+
+### Setup
+
+	var $f = require("fluid");
+
+### Example Objects
 	
 	var myFirstObj = {
 		doSomething : function(options, callback) { 
@@ -38,75 +78,43 @@ For example, with the following custom objects:-
 			callback(err, result);
 		}
 	};
-
-The code to execute these "callback" based methods would look something like this:-
-
-	myFirstObj.doSomething({ /* args */ }, function(err, res1) {
-		if (err) {
-			console.log(err);
-		} else {
-			myFirstObj.doSomethingElse({ /* args */ }, function(err, res2) {
-				if (err) {
-					console.log(err);
-				} else {
-					mySecondObj.doSomethingMore({ /* args */ }, function(err, res3) {
-						if (err) {
-							console.log(err);
-						} else {
-							/* finished */
-						}
-					});
-				}
-			});
-		}
-	});
-
-The solution...
 	
-## Quick Examples
-
-### Setup
-
-	var fluid = require("fluid");
-
 ### Streamlined
 
 Note: series is the default flow control mode, so it can be ommitted
 	
-	fluid(myFirstObj).doSomething({ /* args */ }).doSomethingElse({ /* args */ })
-		.with(mySecondObj).doSomethingMore({ /* args */ })
+	$f(myFirstObj).doSomething(/* args */).doSomethingElse(/* args */)
+		.with(mySecondObj).doSomethingMore(/* args */)
 	.go(function(err, results) {
-		// results is now an array of return values passed to each method callback
+		// results is now an array of return values from each method callback
 	});
 
 ### Expressive
 	
-	fluid().series()		
+	$f().series()		
 		.with(myFirstObj)
-			.doSomething({ /* args */ })
-			.doSomethingElse({ /* args */ })
+			.doSomething(/* args */)
+			.doSomethingElse(/* args */)
 		.with(mySecondObj)
-			.doSomethingMore({ /* args */ })
+			.doSomethingMore(/* args */)
 	.go(function(err, results) {
-		// results is now an array of return values passed to each method callback
+		// results is now an array of return values from each method callback
 	});	
 
 ### Multiple flow control types
 	
-	fluid()
+	$f()
 		.series()		
 			.with(myFirstObj)
-				.doSomething({ /* args */ })
-				.doSomethingElse({ /* args */ })
+				.doSomething(/* args */)
+				.doSomethingElse(/* args */)
 		.parallel()		
 			.with(mySecondObj)
-				.doSomethingMore({ /* args */ })
-				.doSomethingMorer({ /* args */ })
-				.doSomethingMorerer({ /* args */ })
+				.doSomethingMore(/* args */)
+				.doSomethingMorer(/* args */)
+				.doSomethingMorerer(/* args */)
 	.go(function(err, results) {
-		/*
-			results is now an array (item for each queue) of arrays (item for each method return value)
-		*/
+		// results is now an array of return values from each method callback
 	});
 	
 
@@ -123,11 +131,6 @@ Releases are available for download from
 [GitHub](https://github.com/peteclark82/node-fluid).
 
 
-## Appreciation
-
-Many thanks to [caolan](https://github.com/caolan) for sharing his excellent module [Async](https://github.com/caolan/async)
-
-
 ## Documentation
 
 * [fluid](#fluid)
@@ -137,8 +140,12 @@ Many thanks to [caolan](https://github.com/caolan) for sharing his excellent mod
 * [with](#with)
 * [series](#series)
 * [parallel](#parallel)
+* [info](#info)
+* [custom](#custom)
+* [self](#self)
 * [go](#go)
 * [context methods](#contextMethods)
+* [late bound arguments](#lateBoundArgs)
 
 ---------------------------------------
 
@@ -158,10 +165,7 @@ __Arguments__
   
 __Example__
 
-    // assuming an object exists called myObj
-	var fluid = require("fluid");
-	
-	fluid(myObj).doSomething({ /* args */ })  
+	$f(fs).readFile("./test.txt")  
 		/* .etc.etc... */
 	.go(function(err, res) { /* finished */ }
 
@@ -176,23 +180,20 @@ __Example__
 
 Switches the current application context to the one specified.
 
-Note, The context can be switch as many times as required. Useful for cleanly working 
-with multiple objects.
+Note, The context can be switch as many times as required. Useful when working 
+with multiple libraries.
 
 __Arguments__
 
-* context - An application context to wrap with fluent methods.
+* context - An application context to wrap.
 * Returns the current fluid context.
   
 __Example__
 
-    // assuming a objects exist called myObj and myObj2
-	var fluid = require("fluid");
-	
-	fluid(myObj).doSomething({ /* args */ })
-		.with(myObj2).doSomethingElse({ /* args */ }) 
+	$f(myObj).doSomething(/* args */)
+		.with(myObj2).doSomethingElse(/* args */) 
 		/* .etc.etc... */
-	.go(function(err, res) { /* finished */ }
+	.go(function(err, res) { /* finished */ });
 
 
 ---------------------------------------
@@ -200,7 +201,7 @@ __Example__
 <a name="series" />
 ### series()
 
-Creates a new queue of method calls that will be executed in series. Multiple queues 
+Creates a new group of method calls that will be executed in series. Multiple groups 
 with different flow control types can be used together, and will themselves be executed in series when the 
 [go](#go) command is called.
 
@@ -212,14 +213,11 @@ __Arguments__
   
 __Example__
 
-    // assuming an object exists called myObj
-	var fluid = require("fluid");
-	
-	fluid(myObj).series()
-		.doSomething({ /* args */ })
-		.doSomethingElse({ /* args */ })
+	$f(myObj).series()
+		.doSomething(/* args */)
+		.doSomethingElse(/* args */)
 		/* .etc.etc... */
-	.go(function(err, res) { /* finished */ }
+	.go(function(err, res) { /* finished */ });
 		
 		
 ---------------------------------------
@@ -227,7 +225,7 @@ __Example__
 <a name="parallel" />
 ### parallel()
 
-Creates a new queue of method calls that will be executed in parallel. Multiple queues 
+Creates a new group of method calls that will be executed in parallel. Multiple groups 
 with different flow control types can be used together, and will themselves be executed in series when the 
 [go](#go) command is called.
 
@@ -240,14 +238,93 @@ __Arguments__
   
 __Example__
 
-    // assuming an object exists called myObj
-	var fluid = require("fluid");
-	
-	fluid(myObj).parallel()
-		.doSomething({ /* args */ })
-		.doSomethingElse({ /* args */ })
+	$f(myObj).parallel()
+		.doSomething(/* args */)
+		.doSomethingElse(/* args */)
 		/* .etc.etc... */
-	.go(function(err, res) { /* finished */ }
+	.go(function(err, res) { /* finished */ });
+
+
+---------------------------------------
+
+<a name="info" />
+### info(options)
+
+Provides a way to explicitly name callback values on the result. Also allows decorating errors with extra detail.
+
+__Arguments__
+
+* options - Options for providing explicit detail for result
+    * name - String. Specifies a name for the callback return value on the result.
+	* error - String. Specifies extra detail to decorate any error raised.
+  
+__Example__
+
+	$f(fs)
+		.info({name : "test1"}).readFile("./test1.txt")
+		.info({name : "test2"}).readFile("./test2.txt")
+	.go(function(err, result) {
+		/*
+			result:-
+			{
+				test1 : [<Buffer>],
+				test2 : [<Buffer>]
+			}
+		*/		
+	});
+
+You can also use the short hand:-
+
+	$f(fs)
+		({name : "test1"}).readFile("./test1.txt")
+		({name : "test2"}).readFile("./test2.txt")
+	.go(function(err, result) {});
+	
+Note, there is no '.' before the '('. The fluid context itself wraps the info function.
+
+	
+---------------------------------------
+
+<a name="custom" />
+### custom(customFunction(callback))
+
+Creates a new custom task that is added to the existing group. The custom task must invoke the callback provided 
+when finished processing.
+
+__Arguments__
+
+* customFunction(callback) - Some custom code that will receive a callback to be invoked upon completion. 
+    * callback - Function. A callback to invoke when custom code has completed.
+
+__Example__
+
+	$f(fs)
+		.readFile("./test1.txt")
+		.readFile("./test2.txt")
+		.custom(function(callback) {
+			callback(null, this.readFile[0].toString() + this.readFile[1].toString());
+		})
+		.writeFile("./output.txt", $f("this.custom[0]"))
+	.go(function(err, result) {});
+
+
+---------------------------------------
+
+<a name="self" />
+### self()
+
+If the context being wrapped is a function itself, it can be invoked using the self method.
+
+__Example__
+	
+	var myFunc = function(arg, callback) { 
+		callback(null, arg + 1);
+	}
+
+	$f(myFunc)
+		.self(1)
+		.self(2)
+	.go(function(err, result) {});
 
 		
 ---------------------------------------
@@ -255,7 +332,7 @@ __Example__
 <a name="go" />
 ### go([options,] callback)
 
-Executes all queued method calls against their registered application contexts, then invokes the specified
+Executes all queued function calls against their registered application contexts, then invokes the specified
 callback when completed, or any of the methods error.
 
 If multiple flow control groups have been created, each group will be executed in series.
@@ -264,54 +341,33 @@ __Arguments__
 
 * Optional. options - Options for execution
     * debug - Boolean. Logs out to the console information about execution for debugging.
-* callback(err, res) - A callback that is invoked after all of the methods have been run,
-  or an error occurrs. If no error occurrs, res will be an array of return values that were passed to each method callback.
-  If multiple flow control queues have been executed it will be an array (entry for each queue) of arrays 
-  (entry for each method return value)
+* callback(err, result) - A callback that is invoked after all of the methods have been executed,
+  or an error occurrs. If no error occurrs, result will be an object containing arrays of values from each function callback.
   
 __Example__
 
-    // assuming an object exists called myObj
-	var fluid = require("fluid");
-	
-	fluid(myObj).series()
-		.doSomething({ /* args */ })
-		.doSomethingElse({ /* args */ })
-		.parallel()
-		.doSomethingMore({ /* args */ })
-	.go(function(err, res) { 
+    // assuming an object exists called myObj	
+	$f(myObj).series()
+		.doSomething(/* args */)
+		.doSomething(/* args */)
+		.doSomethingElse(/* args */)
+	.parallel()
+		.doSomethingMore(/* args */)
+	.go(function(err, result) { 
 		if (err) { /* error */ } else {
 		/* 
-			res :-
-				
-				[
-					[
-						0 : { /* return value from doSomething */ },
-						1 : { /* return value from doSomethingElse */ },
-						"doSomething" : { /* return value from doSomething */ },
-						"doSomethingElse" : { /* return value from doSomethingElse */ }
-					],
-					[
-						0 : { /* return value from doSomethingMore */ },
-						"doSomethingMore" : { /* return value from doSomethingMore */ },
-					]
-				]
-				
-			if "parallel" wasn't there, and it was only a single mode of flow control it would look 
-			like :-
-				
-				[
-					0 : { /* return value from doSomething */ },
-					1 : { /* return value from doSomethingElse */ },
-					2 : { /* return value from doSomethingMore */ },
-					"doSomething" : { /* return value from doSomething */ },
-					"doSomethingElse" : { /* return value from doSomethingElse */ },
-					"doSomethingMore" : { /* return value from doSomethingMore */ }
-				]
-			
+			result :-				
+			{
+				"doSomething" : [
+					{ /* return value from first doSomething */ }
+					{ /* return value from second doSomething */ }
+				],
+				"doSomethingElse" : [{ /* return value from doSomethingElse */ }],
+				"doSomethingMore" : [{ /* return value from doSomethingMore */ }]
+			}
 		*/
 		}
-	}
+	});
 
 
 ---------------------------------------
@@ -319,70 +375,83 @@ __Example__
 <a name="contextMethods" />
 ### Context Methods
 
-The fluid context will wrap all function properties of an application context.
+The fluid context will wrap all function properties of an object.
 
-NOTE: It is only possible to wrap functions that implement 
-the following asynchronous signature:-
+NOTE: Fluid.js currently only supports methods that take a callback as the last argument:-
 
 	function(options, callback) -> callback(err, result)
+		
+	function(arg1, arg2, ..., callback) -> callback(err, result)
+	
+	etc...
+
 
 __Example__
 
-    var myObj = {
-		doSomething : function(options, callback) {
-			callback(null, { /* return values */ });
+    var myCalculator = {
+		addTen : function(val, callback) {
+			callback(null, val + 10 );
 		},
-		doSomethingElse : function(options, callback) {
-			callback({ message : "Error!" });
-		},
-		doSomethingMore : function(options, callback) {
-			callback(null, { /* return values */ });
+		multiplyByTen : function(val, callback) {
+			callback(null, val * 10);
 		}
 	};
-	
-	var fluid = require("fluid");
-	
-	fluid(myObj)
-		.doSomething({ /* args */ })
-		.doSomethingElse({ /* args */ })
-		.doSomethingMore({ /* args */ })
-	.go(function(err, res) {
-		/* finished with error, without executing doSomethingMore */
+		
+	$f(myCalculator)
+		.addTen(1)
+		.addTen(2)
+		.multiplyByTen(2)
+	.go(function(err, result) {
+		/* 
+			result :-
+			{
+				"addTen" : [11, 12],
+				"multiplyByTen" : [20]
+			}		
+		*/
 	});
 	
-You can even use the result of previous methods in the options to others methods
-
-	var myObj = {
-		doSomething : function(options, callback) {
-			callback(null, { ret1 : options.opt1 + 10 });
-		},
-		doSomethingElse : function(options, callback) {
-			callback(null, { ret2 : options.opt2 * 10 });
-		}
-	};
+You can even use the result of previous callbacks in the arguments to other functions. See [late bound arguments](#lateBoundArgs).
 	
-	var fluid = require("fluid");
-	
-	fluid(myObj)
-		.doSomething({ opt1 : 1 })
-		.doSomethingElse(function(){return { opt2 : this[0].ret1 }})
-	.go(function(err, res) {
+	$f(myCalculator)
+		.addTen(1)
+		.multiplyByTen($f("this.addTen[0]"))
+	.go(function(err, result) {
 		/* 
-			res :-
-				[
-					0 : { ret1 : 11 },
-					1 : { ret2 : 110 },
-					"doSomething" : { ret1 : 11 },
-					"doSomethingElse" : { ret2 : 110 }
-				]		
+			result :-
+			{
+				"addTen" : [11],
+				"multiplyByTen" : [110]
+			}		
 		*/
 	});
 
-Or by name if you prefer...
 
-	fluid(myObj)
-		.doSomething({ opt1 : 1 })
-		.doSomethingElse(function(){return { opt2 : this.doSomething.ret1 }})
-	.go(function(err, res) {
-		/* finished */
+---------------------------------------
+
+<a name="lateBoundArgs" />
+### Late Bound Arguments - fluid(expression)
+
+Late bound arguments are useful when you need the result of a previous function as an argument to another.
+
+__Arguments__
+
+* expression - String. A javascript expression to be evaluated when the function is called.
+	'this' is the current result so far, and will contain return values of all previously executed callbacks.
+
+__Example__
+
+	$f(myCalculator)
+		.addTen(1)
+		.multiplyByTen($f("this.addTen[0]"))
+	.go(function(err, result) {
+		/* 
+			result :-
+			{
+				"addTen" : [11],
+				"multiplyByTen" : [110]
+			}		
+		*/
 	});
+	
+Note, Fluid treats all string passed to it as late bound argument expressions.
