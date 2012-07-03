@@ -41,8 +41,7 @@ With Fluid.js we could write it like this:-
 	
 	$f(fs).readFile("./input1.txt").readFile("./input2.txt")
 		.custom(function(callback) {
-			var content = this.readFile[0].toString() + this.readFile[1].toString();
-			callback(null, content);
+			callback(null, this.readFile[0].toString() + this.readFile[1].toString());
 		}).writeFile("./output1.txt", $f("this.custom[0]"))
 	.go(function(err, values) {
 		if (err) {console.log(err)} else {
