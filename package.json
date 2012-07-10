@@ -4,33 +4,37 @@
   "description": "An extension to the async utility library. It provides a dynamic fluent interface around any object, allowing chained async method calls.",
   "author": {
     "name":  "Pete Clark",
-	"email": "pclarkgithub@gmail.com"
+		"email": "pclarkgithub@gmail.com"
   },
   "contributors": [],
   "dependencies": {
     "async": "= 0.1.22"
   },
   "devDependencies": {
-	"vows" : "= 0.6.3"
+		"vows" : "= 0.6.3"
+  },
+	"main": "./lib/fluid.js",
+  "scripts": {
+    "test": "vows --spec"
   },
   "keywords": [
     "fluent",
     "fluid",
     "async",
     "flow",
-	"control",
-	"chaining",
-	"chained"
+		"control",
+		"chaining",
+		"chained"
   ],
   "repository": {
     "type": "git",
     "url": "git://github.com/peteclark82/node-fluid"
   },
-  "main": "./lib/fluid.js",
-  "scripts": {
-    "test": "vows --spec"
-  },
-  "_id": "fluid@0.0.1",
-  "_npmVersion": "1.1.12",
-  "_nodeVersion": "v0.8.0"
+	"bugs" : { "web" : "https://github.com/peteclark82/node-fluid/issues" },
+	"licenses" : [
+		{
+			"type" : "MIT",
+			"url" : "https://github.com/peteclark82/node-fluid/LICENSE"
+    }
+  ]
 }
