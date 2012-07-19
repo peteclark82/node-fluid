@@ -40,9 +40,7 @@ For example a typical bit of file processing might look something like:-
 With Fluid.js we could write it like this:-
 	
 	$f(fs).readFile("./input1.txt").readFile("./input2.txt")
-		.custom(function(callback) {
-			callback(null, this.readFile[0].toString() + this.readFile[1].toString());
-		}).writeFile("./output1.txt", $f("this.custom[0]"))
+		.writeFile("./output1.txt", $f("this.readFile[0].toString() + this.readFile[1].toString()"))
 	.go(function(err, values) {
 		if (err) {console.log(err)} else {
 			//do something
