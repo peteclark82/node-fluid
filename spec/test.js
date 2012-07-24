@@ -200,10 +200,10 @@ vows.describe('Using fluid').addBatch({
 				assert.equal(err.message, "error");
 			}
 		},
-		'should allow late bound parameters to be passed to method calls' : {
+		'should allow late bound arguments to be passed to methods' : {
 			topic : function (topic) { 
 				var self = this;
-				
+
 				$f(topic.createSyncContext())
 					.method(1)
 					.method($f("this.method[0] + 1"))
@@ -216,7 +216,27 @@ vows.describe('Using fluid').addBatch({
 				assert.equal(topic.method[0], 1);
 				assert.equal(topic.method[1], 2);
 			},
-			'and raise error if thrown': function (err, topic) {
+			'and raise error if cannot be resolved': function (err, topic) {
+				assert.isDefined(err.message);
+			}
+		},
+		'should allow late bound arguments to be passed to methods as properties of an object' : {
+			topic : function (topic) { 
+				var self = this;
+								
+				$f(topic.createSyncContext())
+					.method(1)
+					.method({ prop1 : $f("this.method[0] + 1") })
+					.method($f("BAD CODE"))
+				.go(function(err, res) {
+					self.callback(err, res);
+				});
+			},
+			'and resolve successfully': function (err, topic) {
+				assert.equal(topic.method[0], 1);
+				assert.equal(topic.method[1].prop1, 2);
+			},
+			'and raise error if cannot be resolved': function (err, topic) {
 				assert.isDefined(err.message);
 			}
 		}

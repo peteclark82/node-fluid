@@ -1,7 +1,7 @@
 {
   "name": "fluid",
-  "version": "0.1.0",
-  "description": "An extension to the async utility library. It provides a dynamic fluent interface around any object, allowing chained async method calls.",
+  "version": "0.1.1",
+  "description": "Create fluent interfaces, inline, around any object, allowing simple chained async method calls.",
   "author": {
     "name":  "Pete Clark",
 		"email": "pclarkgithub@gmail.com"
