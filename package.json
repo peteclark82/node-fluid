@@ -1,6 +1,6 @@
 {
   "name": "fluid",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Create fluent interfaces, inline, around any object, allowing simple chained async method calls.",
   "author": {
     "name":  "Pete Clark",
