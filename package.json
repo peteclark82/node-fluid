@@ -1,7 +1,7 @@
 {
   "name": "fluid",
   "version": "0.1.3",
-  "description": "Create fluent interfaces, inline, around any object, allowing simple chained async method calls.",
+  "description": "Fluid.js is a simple, fluent, API that automatically manages callbacks of asynchronous code",
   "author": {
     "name":  "Pete Clark",
 		"email": "pclarkgithub@gmail.com"
