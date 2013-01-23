@@ -1,26 +1,10 @@
 # Fluid.js [![Build Status](https://secure.travis-ci.org/peteclark82/node-fluid.png)](https://secure.travis-ci.org/peteclark82/node-fluid.png)
 
-Fluid.js is a simple fluent interface API for javascript and node.js. It is used to create fluent interfaces
-around existing vanilla objects, without all the boiler plate code.
+Fluid.js is a simple, fluent, API that automatically manages callbacks of asynchronous code.
 
-This is a useful extension to the popular [Async](https://github.com/caolan/async) module.
-
-NOTE: Fluid.js currently only supports methods that take a callback as the last argument:-
-
-	function(options, callback) -> callback(err, result)
-		
-	function(arg1, arg2, ..., callback) -> callback(err, result)
+## Overview
 	
-	etc...
-
-
-## The Problem
-
-Flow control and callbacks can become very messy and unmanagable when using lots of asynchronous functions.
-Many libraries exist for node.js that make things much less painful. This module is meant to add yet another
-tool to your belt.
-
-For example a typical bit of file processing might look something like:-
+Without fluid :-
 
 	fs.readFile("./input1.txt", function(err, input1Buffer) {
 		if (err) {console.log(err)} else {
@@ -37,7 +21,7 @@ For example a typical bit of file processing might look something like:-
 		}
 	});
 
-With Fluid.js we could write it like this:-
+With fluid :-
 	
 	$f(fs).readFile("./input1.txt").readFile("./input2.txt")
 		.writeFile("./output1.txt", $f("this.readFile[0].toString() + this.readFile[1].toString()"))
@@ -49,6 +33,13 @@ With Fluid.js we could write it like this:-
 	
 Any error handling is managed in the "go" callback and all callback return values are available for usage.
 
+NOTE: Fluid.js currently only supports methods that take a callback as the last argument:-
+
+	function(options, callback) -> callback(err, result)
+		
+	function(arg1, arg2, ..., callback) -> callback(err, result)
+	
+	etc...
 	
 ## Quick Examples
 
